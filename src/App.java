@@ -44,6 +44,13 @@ public class App {
         Route r28 = new Route("R28");
         Route r29 = new Route("R29");
         Route r30 = new Route("R30");
+        Route r31 = new Route("R31");
+        Route r32 = new Route("R32");
+        Route r33 = new Route("R33");
+        Route r34 = new Route("R34");
+        Route r35 = new Route("R35");
+        Route r36 = new Route("R36");
+
         graph.addRoute(r1);
         graph.addRoute(r2);
         graph.addRoute(r3);
@@ -74,6 +81,12 @@ public class App {
         graph.addRoute(r28);
         graph.addRoute(r29);
         graph.addRoute(r30);
+        graph.addRoute(r31);
+        graph.addRoute(r32);
+        graph.addRoute(r33);
+        graph.addRoute(r34);
+        graph.addRoute(r35);
+        graph.addRoute(r36);
 
 
         Airport a1 = new Airport("PA");
@@ -131,6 +144,12 @@ public class App {
         graph.connect(r28, a4, a3, 600);
         graph.connect(r29, a3, a9, 700);
         graph.connect(r30, a3, a8, 800);
+        graph.connect(r31, a1, a7, 200);  // AC -> SE
+        graph.connect(r32, a3, a7, 150);  // BA -> SE
+        graph.connect(r33, a1, a9, 250);  // AC -> AM
+        graph.connect(r34, a3, a10, 400); // AL -> GO
+        graph.connect(r35, a12, a5, 300); // GO -> MS
+        graph.connect(r36, a3, a12, 350); // MS -> MT
 
         graph.printConnectionMatrix();
 
@@ -152,9 +171,13 @@ public class App {
 
         Dijkstra dijkstra = new Dijkstra(graph);
         dijkstra.runDijkstra("SP", "MT");
+        graph.cleanGraph();
+
 
         Dijkstra dijkstra2= new Dijkstra(graph);
         dijkstra2.runDijkstra("PA", "AC");
+        graph.cleanGraph();
+
 
     }
 }

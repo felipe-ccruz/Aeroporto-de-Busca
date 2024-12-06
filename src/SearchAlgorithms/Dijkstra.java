@@ -48,12 +48,19 @@ public class Dijkstra {
     private void relaxRoute(Airport current, Route route) {
         Airport neighbor = route.getDestination();
         int newDist = distances.get(current) + route.getDistance();
+    
+        // Apenas atualize a distância se o novo caminho for menor
         if (newDist < distances.get(neighbor)) {
             distances.put(neighbor, newDist);
             neighbor.setPredecessor(current);
-            queue.add(neighbor);
+    
+            // Adicione à fila apenas se ainda não estiver processado
+            if (!queue.contains(neighbor)) {
+                queue.add(neighbor);
+            }
         }
     }
+    
 
     // Busca um vértice pelo nome
     public Airport searchFor(String airportName) throws AirportNotFoundException {
@@ -71,25 +78,38 @@ public class Dijkstra {
     
         for (Airport a : graph.getAirports()) {
             String predecessorName = (a.getPredecessor() != null) ? a.getPredecessor().getName() : "null";
-            System.out.printf("%-10s | %-10d | %-15s%n", a.getName(), distances.get(a), predecessorName);
+            int distance = distances.get(a);
+    
+            if (distance == Integer.MAX_VALUE) {
+                System.out.printf("%-10s | %-10s | %-15s%n", a.getName(), "Infinito", predecessorName);
+            } else {
+                System.out.printf("%-10s | %-10d | %-15s%n", a.getName(), distance, predecessorName);
+            }
         }
     
-        // Imprimir caminho do source ao target
         printShortestPath(initialAirport, targetAirport);
     }
     
+    
     // Função para imprimir o caminho mais curto até o target
     public void printShortestPath(Airport initialVertex, Airport target) {
-        List<String> path = new ArrayList<>();
-        Airport step = target;
-    
-        while (step != null) {
-            path.add(step.getName());
-            step = step.getPredecessor();
+    List<String> path = new ArrayList<>();
+    Set<Airport> visited = new HashSet<>(); // Para detectar ciclos
+    Airport step = target;
+
+    while (step != null) {
+        if (visited.contains(step)) {
+            System.err.println("Ciclo detectado no caminho mais curto.");
+            break; // Evita loop infinito
         }
-        Collections.reverse(path);
-        System.out.println("\nCaminho mais curto: " + String.join(" -> ", path));
-        System.out.println("Distância total: " + distances.get(target));
+        visited.add(step);
+        path.add(step.getName());
+        step = step.getPredecessor();
     }
+    Collections.reverse(path);
+    System.out.println("\nCaminho mais curto: " + String.join(" -> ", path));
+    System.out.println("Distância total: " + distances.get(target));
+}
+
     
 }
